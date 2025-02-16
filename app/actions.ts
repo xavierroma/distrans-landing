@@ -4,6 +4,7 @@ import { PostHog } from "posthog-node";
 
 const posthog = new PostHog(process.env.NEXT_PUBLIC_POSTHOG_KEY!, {
   host: process.env.NEXT_PUBLIC_POSTHOG_HOST!,
+
 })
 
 export async function joinWaitlist(formData: FormData) {
@@ -11,8 +12,11 @@ export async function joinWaitlist(formData: FormData) {
   console.log('Joined waitlist:', email)
   posthog.capture({
     distinctId: email as string,
-    event: 'joined_waitlist',
-    properties: { email },
+    event: 'joined_waitlist_server',
+    properties: {
+      email,
+      $process_person_profile: false,
+    },
   });
   await posthog.flush()
 }

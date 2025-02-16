@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { MoveRight, Check } from "lucide-react"
+import posthog from 'posthog-js'
 
 export function WaitlistForm({
   onSubmit
@@ -13,6 +14,8 @@ export function WaitlistForm({
   const [isSuccess, setIsSuccess] = useState(false)
 
   async function handleSubmit(formData: FormData) {
+    posthog.identify(formData.get('email') as string);
+    posthog.capture('joined_waitlist', { email: formData.get('email') });
     await onSubmit(formData)
     setIsSuccess(true)
     setTimeout(() => setIsSuccess(false), 10000)
