@@ -1,0 +1,1539 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Email Inbox API",
+    "version": "1.0.0",
+    "description": "REST API for managing email inbox, inboxes, contacts, messages, and threads. This API allows you to integrate email communication capabilities into your applications.",
+    "contact": {
+      "name": "API Support",
+      "email": "support@example.com",
+      "url": "https://docs.example.com"
+    },
+    "license": {
+      "name": "Apache 2.0",
+      "url": "https://www.apache.org/licenses/LICENSE-2.0.html"
+    }
+  },
+  "servers": [
+    {
+      "url": "https://api.example.com",
+      "description": "Production server"
+    },
+    {
+      "url": "https://staging-api.example.com",
+      "description": "Staging server"
+    }
+  ],
+  "tags": [
+    {
+      "name": "Inboxes",
+      "description": "Operations related to email inboxes"
+    },
+    {
+      "name": "Messages",
+      "description": "Operations for sending and managing messages"
+    },
+    {
+      "name": "Threads",
+      "description": "Operations for managing message threads"
+    },
+    {
+      "name": "Contacts",
+      "description": "Operations for managing contacts"
+    },
+    {
+      "name": "Webhooks",
+      "description": "Operations for managing webhooks"
+    }
+  ],
+  "paths": {
+    "/v1/inboxes/": {
+      "post": {
+        "tags": ["Inboxes"],
+        "summary": "Create a new inbox",
+        "description": "Creates a new email inbox for receiving and sending messages",
+        "operationId": "createInbox",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateInboxRequest"
+              },
+              "example": {
+                "type": "EMAIL_INBOX",
+                "email": "support@company.com",
+                "metadata": {
+                  "department": "Support",
+                  "team": "Customer Success"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Inbox created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Inbox"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/inboxes": {
+      "get": {
+        "tags": ["Inboxes"],
+        "summary": "List inboxes",
+        "operationId": "listInboxes",
+        "responses": {
+          "200": {
+            "description": "List of inboxes",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "inboxes": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Inbox"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/inboxes/{inboxId}": {
+      "get": {
+        "tags": ["Inboxes"],
+        "summary": "Get inbox by ID",
+        "operationId": "getInbox",
+        "parameters": [
+          {
+            "name": "inboxId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Inbox details",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Inbox"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/messages": {
+      "post": {
+        "tags": ["Messages"],
+        "summary": "Send a message",
+        "description": "Send a new message through a specified inbox. Supports text, HTML, and attachments.",
+        "operationId": "sendMessage",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SendMessageRequest"
+              },
+              "example": {
+                "thread_id": "123e4567-e89b-12d3-a456-426614174000",
+                "inbox_id": "123e4567-e89b-12d3-a456-426614174001",
+                "recipients": [
+                  {
+                    "raw_address": "john.doe@example.com",
+                    "type": "RECIPIENT_TYPE_TO"
+                  }
+                ],
+                "content_blocks": [
+                  {
+                    "type": "CONTENT_TYPE_HTML",
+                    "content": "<p>Hello World!</p>",
+                    "sequence": 1
+                  }
+                ],
+                "subject": "Important Update"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Message sent successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Message"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Thread or inbox not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limit exceeded",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": ["Messages"],
+        "summary": "List messages",
+        "description": "Retrieve a paginated list of messages. Can be filtered by thread ID and message IDs.",
+        "operationId": "listMessages",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "thread_id",
+            "in": "query",
+            "required": true,
+            "description": "ID of the thread to fetch messages from",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "message_ids",
+            "in": "query",
+            "description": "Optional list of specific message IDs to retrieve",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "format": "uuid"
+              }
+            },
+            "style": "form",
+            "explode": false
+          },
+          {
+            "name": "page_size",
+            "in": "query",
+            "description": "Number of messages to return per page",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 20
+            }
+          },
+          {
+            "name": "page_token",
+            "in": "query",
+            "description": "Token for pagination",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of messages retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["messages", "next_page_token"],
+                  "properties": {
+                    "messages": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Message"
+                      }
+                    },
+                    "next_page_token": {
+                      "type": "string",
+                      "description": "Token for retrieving the next page of results"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid parameters",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/messages/{messageId}": {
+      "get": {
+        "tags": ["Messages"],
+        "summary": "Get message by ID",
+        "operationId": "getMessage",
+        "parameters": [
+          {
+            "name": "messageId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Message details",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Message"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/threads": {
+      "post": {
+        "tags": ["Threads"],
+        "summary": "Create a new thread",
+        "operationId": "createThread",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateThreadRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Thread created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Thread"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": ["Threads"],
+        "summary": "List threads",
+        "operationId": "listThreads",
+        "parameters": [
+          {
+            "name": "inbox_id",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of threads",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "threads": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Thread"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/threads/{threadId}": {
+      "get": {
+        "tags": ["Threads"],
+        "summary": "Get thread by ID",
+        "operationId": "getThread",
+        "parameters": [
+          {
+            "name": "threadId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Thread details",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Thread"
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "tags": ["Threads"],
+        "summary": "Update thread",
+        "operationId": "updateThread",
+        "parameters": [
+          {
+            "name": "threadId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateThreadRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Thread updated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Thread"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/contacts": {
+      "post": {
+        "tags": ["Contacts"],
+        "summary": "Create a new contact",
+        "operationId": "createContact",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateContactRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Contact created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Contact"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": ["Contacts"],
+        "summary": "List contacts",
+        "operationId": "listContacts",
+        "responses": {
+          "200": {
+            "description": "List of contacts",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "contacts": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Contact"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/contacts/{contactId}": {
+      "get": {
+        "tags": ["Contacts"],
+        "summary": "Get contact by ID",
+        "operationId": "getContact",
+        "parameters": [
+          {
+            "name": "contactId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Contact details",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Contact"
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "tags": ["Contacts"],
+        "summary": "Update contact",
+        "operationId": "updateContact",
+        "parameters": [
+          {
+            "name": "contactId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateContactRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Contact updated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Contact"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": ["Contacts"],
+        "summary": "Delete contact",
+        "operationId": "deleteContact",
+        "parameters": [
+          {
+            "name": "contactId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Contact deleted successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/webhooks": {
+      "post": {
+        "tags": ["Webhooks"],
+        "summary": "Create webhook subscription",
+        "description": "Subscribe to webhook notifications for specific events",
+        "operationId": "createWebhook",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateWebhookRequest"
+              },
+              "example": {
+                "url": "https://api.your-domain.com/webhooks",
+                "events": ["message.created"],
+                "description": "New message notifications",
+                "metadata": {
+                  "environment": "production"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Webhook subscription created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Webhook"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": ["Webhooks"],
+        "summary": "List webhook subscriptions",
+        "operationId": "listWebhooks",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of webhook subscriptions",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "webhooks": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Webhook"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      },
+      "apiKeyAuth": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "X-API-Key"
+      }
+    },
+    "schemas": {
+      "Account": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "user_id": {
+            "type": "string"
+          },
+          "metadata": {
+            "type": "object"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "CreateAccountRequest": {
+        "type": "object",
+        "required": ["user_id"],
+        "properties": {
+          "user_id": {
+            "type": "string"
+          },
+          "metadata": {
+            "type": "object"
+          }
+        }
+      },
+      "Inbox": {
+        "type": "object",
+        "required": ["id", "account_id", "type", "email", "status"],
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Unique identifier for the inbox"
+          },
+          "account_id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Account ID that owns this inbox"
+          },
+          "type": {
+            "$ref": "#/components/schemas/InboxType"
+          },
+          "status": {
+            "$ref": "#/components/schemas/InboxStatus"
+          },
+          "email": {
+            "type": "string",
+            "format": "email",
+            "description": "Email address associated with this inbox"
+          },
+          "display_name": {
+            "type": "string",
+            "description": "Human-readable name for the inbox",
+            "maxLength": 100
+          },
+          "metadata": {
+            "type": "object",
+            "description": "Additional metadata for the inbox"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "InboxType": {
+        "type": "string",
+        "enum": ["EMAIL_INBOX"],
+        "description": "Type of email inbox"
+      },
+      "InboxStatus": {
+        "type": "string",
+        "enum": ["ACTIVE", "INACTIVE", "PENDING_VERIFICATION", "FAILED"],
+        "description": "Current status of the inbox"
+      },
+      "CreateInboxRequest": {
+        "type": "object",
+        "required": ["type"],
+        "properties": {
+          "type": {
+            "$ref": "#/components/schemas/InboxType"
+          },
+          "email": {
+            "type": "string"
+          },
+          "metadata": {
+            "type": "object"
+          }
+        }
+      },
+      "Message": {
+        "type": "object",
+        "required": [
+          "id",
+          "thread_id",
+          "inbox_id",
+          "direction",
+          "status",
+          "created_at"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "thread_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "inbox_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "parent_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "direction": {
+            "$ref": "#/components/schemas/MessageDirection"
+          },
+          "status": {
+            "$ref": "#/components/schemas/MessageStatus"
+          },
+          "subject": {
+            "type": "string",
+            "maxLength": 998
+          },
+          "sender": {
+            "$ref": "#/components/schemas/Sender"
+          },
+          "recipients": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Recipient"
+            }
+          },
+          "content_blocks": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ContentBlock"
+            }
+          },
+          "metadata": {
+            "type": "object"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "sent_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "received_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "EmailType": {
+        "type": "string",
+        "enum": [
+          "EMAIL_TYPE_UNSPECIFIED",
+          "EMAIL_TYPE_WORK",
+          "EMAIL_TYPE_PERSONAL",
+          "EMAIL_TYPE_UNKNOWN"
+        ]
+      },
+      "RecipientType": {
+        "type": "string",
+        "enum": [
+          "RECIPIENT_TYPE_UNSPECIFIED",
+          "RECIPIENT_TYPE_TO",
+          "RECIPIENT_TYPE_CC",
+          "RECIPIENT_TYPE_BCC",
+          "RECIPIENT_TYPE_REPLY_TO"
+        ]
+      },
+      "ContentType": {
+        "type": "string",
+        "enum": [
+          "CONTENT_TYPE_UNSPECIFIED",
+          "CONTENT_TYPE_TEXT",
+          "CONTENT_TYPE_FILE",
+          "CONTENT_TYPE_AUDIO",
+          "CONTENT_TYPE_HTML"
+        ]
+      },
+      "MessageDirection": {
+        "type": "string",
+        "enum": [
+          "MESSAGE_DIRECTION_UNSPECIFIED",
+          "MESSAGE_DIRECTION_INBOUND",
+          "MESSAGE_DIRECTION_OUTBOUND"
+        ]
+      },
+      "MessageStatus": {
+        "type": "string",
+        "enum": [
+          "MESSAGE_STATUS_UNSPECIFIED",
+          "MESSAGE_STATUS_SENT",
+          "MESSAGE_STATUS_FAILED",
+          "MESSAGE_STATUS_QUEUED"
+        ]
+      },
+      "ContentBlock": {
+        "type": "object",
+        "required": ["type", "content", "sequence"],
+        "properties": {
+          "type": {
+            "$ref": "#/components/schemas/ContentType"
+          },
+          "content": {
+            "type": "string",
+            "description": "Content of the block (text, base64 encoded file, etc.)",
+            "maxLength": 50000000
+          },
+          "sequence": {
+            "type": "integer",
+            "minimum": 1,
+            "description": "Order of the content block in the message"
+          },
+          "mime_type": {
+            "type": "string",
+            "description": "MIME type for file attachments",
+            "example": "application/pdf"
+          },
+          "filename": {
+            "type": "string",
+            "description": "Original filename for attachments"
+          },
+          "size": {
+            "type": "integer",
+            "description": "Size in bytes for attachments"
+          },
+          "metadata": {
+            "type": "object",
+            "description": "Additional metadata for the content block"
+          }
+        }
+      },
+      "Sender": {
+        "type": "object",
+        "properties": {
+          "contact_id": {
+            "type": "string"
+          },
+          "contact": {
+            "$ref": "#/components/schemas/Contact"
+          },
+          "raw_address": {
+            "type": "string"
+          }
+        }
+      },
+      "Recipient": {
+        "type": "object",
+        "properties": {
+          "contact_id": {
+            "type": "string"
+          },
+          "raw_address": {
+            "type": "string"
+          },
+          "type": {
+            "$ref": "#/components/schemas/RecipientType"
+          }
+        }
+      },
+      "FullRecipient": {
+        "type": "object",
+        "properties": {
+          "contact": {
+            "$ref": "#/components/schemas/Contact"
+          },
+          "raw_address": {
+            "type": "string"
+          },
+          "type": {
+            "$ref": "#/components/schemas/RecipientType"
+          }
+        }
+      },
+      "Thread": {
+        "type": "object",
+        "required": ["id", "inbox_id", "status", "created_at"],
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "inbox_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "subject": {
+            "type": "string",
+            "maxLength": 998
+          },
+          "status": {
+            "$ref": "#/components/schemas/ThreadStatus"
+          },
+          "participants": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Participant"
+            }
+          },
+          "last_message_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "message_count": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "metadata": {
+            "type": "object"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "ThreadStatus": {
+        "type": "string",
+        "enum": ["OPEN", "CLOSED", "ARCHIVED", "SPAM"],
+        "description": "Current status of the thread"
+      },
+      "Participant": {
+        "type": "object",
+        "required": ["contact_id", "role"],
+        "properties": {
+          "contact_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "role": {
+            "type": "string",
+            "enum": ["OWNER", "PARTICIPANT"]
+          },
+          "last_read_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "Contact": {
+        "type": "object",
+        "required": ["id", "created_at"],
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "account_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "first_name": {
+            "type": "string",
+            "maxLength": 100
+          },
+          "last_name": {
+            "type": "string",
+            "maxLength": 100
+          },
+          "display_name": {
+            "type": "string",
+            "maxLength": 200
+          },
+          "company": {
+            "type": "string",
+            "maxLength": 200
+          },
+          "title": {
+            "type": "string",
+            "maxLength": 200
+          },
+          "emails": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Email"
+            }
+          },
+          "phones": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Phone"
+            }
+          },
+          "social_profiles": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SocialProfile"
+            }
+          },
+          "tags": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "metadata": {
+            "type": "object"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "last_contacted_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "Email": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "type": {
+            "$ref": "#/components/schemas/EmailType"
+          },
+          "email": {
+            "type": "string"
+          }
+        }
+      },
+      "Phone": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "type": {
+            "$ref": "#/components/schemas/PhoneType"
+          },
+          "phone": {
+            "type": "string"
+          }
+        }
+      },
+      "SocialProfile": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "type": {
+            "$ref": "#/components/schemas/SocialProfileType"
+          },
+          "username": {
+            "type": "string"
+          }
+        }
+      },
+      "PhoneType": {
+        "type": "string",
+        "enum": [
+          "PHONE_TYPE_UNSPECIFIED",
+          "PHONE_TYPE_WORK",
+          "PHONE_TYPE_PERSONAL",
+          "PHONE_TYPE_UNKNOWN"
+        ]
+      },
+      "SocialProfileType": {
+        "type": "string",
+        "enum": [
+          "SOCIAL_PROFILE_TYPE_UNSPECIFIED",
+          "SOCIAL_PROFILE_TYPE_LINKEDIN"
+        ]
+      },
+      "CreateContactRequest": {
+        "type": "object",
+        "properties": {
+          "first_name": {
+            "type": "string"
+          },
+          "last_name": {
+            "type": "string"
+          },
+          "emails": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CreateEmail"
+            }
+          },
+          "phones": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CreatePhone"
+            }
+          },
+          "social_profiles": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CreateSocialProfile"
+            }
+          },
+          "metadata": {
+            "type": "object"
+          }
+        }
+      },
+      "CreateEmail": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "$ref": "#/components/schemas/EmailType"
+          },
+          "email": {
+            "type": "string"
+          }
+        }
+      },
+      "CreatePhone": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "$ref": "#/components/schemas/PhoneType"
+          },
+          "phone": {
+            "type": "string"
+          }
+        }
+      },
+      "CreateSocialProfile": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "$ref": "#/components/schemas/SocialProfileType"
+          },
+          "username": {
+            "type": "string"
+          }
+        }
+      },
+      "UpdateContactRequest": {
+        "type": "object",
+        "properties": {
+          "first_name": {
+            "type": "string"
+          },
+          "last_name": {
+            "type": "string"
+          },
+          "emails": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CreateEmail"
+            }
+          },
+          "phones": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CreatePhone"
+            }
+          },
+          "social_profiles": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CreateSocialProfile"
+            }
+          },
+          "metadata": {
+            "type": "object"
+          }
+        }
+      },
+      "Error": {
+        "type": "object",
+        "required": ["code", "message"],
+        "properties": {
+          "code": {
+            "type": "string",
+            "description": "Error code",
+            "example": "INVALID_REQUEST"
+          },
+          "message": {
+            "type": "string",
+            "description": "Error message",
+            "example": "Invalid email format"
+          },
+          "details": {
+            "type": "object",
+            "description": "Additional error details"
+          }
+        }
+      },
+      "SendMessageRequest": {
+        "type": "object",
+        "required": ["thread_id", "inbox_id", "recipients", "content_blocks"],
+        "properties": {
+          "thread_id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "ID of the thread this message belongs to"
+          },
+          "inbox_id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "ID of the inbox to send the message through"
+          },
+          "parent_id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Optional ID of the parent message (for replies)"
+          },
+          "recipients": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Recipient"
+            },
+            "minItems": 1,
+            "description": "List of message recipients"
+          },
+          "content_blocks": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ContentBlock"
+            },
+            "minItems": 1,
+            "description": "Message content blocks (text, HTML, attachments)"
+          },
+          "subject": {
+            "type": "string",
+            "maxLength": 998,
+            "description": "Email subject line"
+          },
+          "metadata": {
+            "type": "object",
+            "description": "Additional custom metadata for the message"
+          }
+        }
+      },
+      "Webhook": {
+        "type": "object",
+        "required": ["id", "url", "events", "status", "created_at"],
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Unique identifier for the webhook subscription"
+          },
+          "url": {
+            "type": "string",
+            "format": "uri",
+            "description": "The URL where webhook events will be sent"
+          },
+          "events": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/WebhookEventType"
+            },
+            "description": "List of events to subscribe to"
+          },
+          "description": {
+            "type": "string",
+            "description": "Optional description of the webhook"
+          },
+          "status": {
+            "type": "string",
+            "enum": ["active", "inactive", "failed"],
+            "description": "Current status of the webhook subscription"
+          },
+          "secret": {
+            "type": "string",
+            "description": "Secret used to sign webhook payloads"
+          },
+          "metadata": {
+            "type": "object",
+            "description": "Additional metadata for the webhook"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "WebhookEventType": {
+        "type": "string",
+        "enum": [
+          "message.created",
+          "message.updated",
+          "message.sent",
+          "message.delivered",
+          "message.failed"
+        ],
+        "description": "Types of events that can trigger webhooks"
+      },
+      "CreateWebhookRequest": {
+        "type": "object",
+        "required": ["url", "events"],
+        "properties": {
+          "url": {
+            "type": "string",
+            "format": "uri",
+            "description": "The URL where webhook events will be sent"
+          },
+          "events": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/WebhookEventType"
+            },
+            "description": "List of events to subscribe to"
+          },
+          "description": {
+            "type": "string",
+            "description": "Optional description of the webhook"
+          },
+          "metadata": {
+            "type": "object",
+            "description": "Additional metadata for the webhook"
+          }
+        }
+      },
+      "WebhookEvent": {
+        "type": "object",
+        "required": ["id", "type", "created_at", "data"],
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Unique identifier for the webhook event"
+          },
+          "type": {
+            "$ref": "#/components/schemas/WebhookEventType"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "data": {
+            "type": "object",
+            "description": "Event-specific payload data",
+            "properties": {
+              "message": {
+                "$ref": "#/components/schemas/Message"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
