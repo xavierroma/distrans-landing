@@ -14,4 +14,5 @@ export async function joinWaitlist(formData: FormData) {
     event: 'joined_waitlist',
     properties: { email },
   });
+  await posthog.flush()
 }
