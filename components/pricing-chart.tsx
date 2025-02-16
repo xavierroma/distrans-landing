@@ -11,8 +11,7 @@ import {
   Area,
   AreaChart,
   CartesianGrid,
-  XAxis,
-  YAxis,
+  XAxis
 } from "recharts";
 
 // Modify the sample data to show cost per 1k emails

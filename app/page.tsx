@@ -160,7 +160,7 @@ export default function Home() {
               <CardContent>
                 <ul className="list-disc pl-6 text-muted-foreground marker:text-primary">
                   <li>Setup in under 10 minutes.</li>
-                  <li>Provision new agent's email inbox in 1 API call.</li>
+                  <li>Provision new agent&apos;s email inbox in 1 API call.</li>
                 </ul>
               </CardContent>
             </Card>
