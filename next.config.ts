@@ -2,13 +2,11 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   /* config options here */
-  async redirects() {
+  async rewrites() {
     return [
       {
         source: '/docs',
         destination: 'https://distrans.mintlify.app',
-        permanent: false,
-        basePath: false
       }
     ];
   }
