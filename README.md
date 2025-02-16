@@ -1,36 +1,47 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Distrans - Email Inboxes for AI Agents
 
-## Getting Started
+![Distrans Hero Section](./landing.png)
 
-First, run the development server:
+Distrans is a no-nonsense email infrastructure service built specifically for AI agents. Get unlimited inboxes with simple, predictable usage-based pricing.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## What is Distrans?
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Distrans provides dedicated email inboxes for your AI agents, allowing them to send and receive emails just like human users. Built with developers in mind, it offers seamless integration with popular AI frameworks and email clients.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Key Features
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- 🚀 **Quick Setup** - Get started in 10 minutes with instant toolkit integration
+- 📬 **Dedicated Inboxes** - Independent inbox per agent with unlimited addresses
+- 🛠️ **Developer API** - RESTful endpoints and real-time webhooks
+- ⚡ **Langchain Ready** - Built-in toolkit with Langraph support
+- 📧 **Native Email** - Full thread & attachment support via AWS SES
+- 🌐 **Custom Domains** - Bring your own domains to build brand trust
+
+## Pricing
+
+Simple, usage-based pricing starting at $2.00 per 1000 emails with volume discounts:
+
+- First 50k emails: $2.00 per 1k
+- Next 50k emails: $1.85 per 1k
+- Next 150k emails: $1.70 per 1k
+- Next 450k emails: $1.55 per 1k
+- Beyond 700k emails: $1.40 per 1k
+
+Included:
+
+- Unlimited inboxes
+- 30 days free data retention
+- 1 custom domain
+- Shared IP
+
+## Early Access
+
+Distrans is currently in early access. [Join the waitlist](https://distranmail.com#waitlist) to be among the first to try it out.
+
+## Documentation
+
+For technical details and integration guides, check out our [documentation](https://distranmail.com/docs).
 
 ## Learn More
 
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Visit [distranmail.com](https://distranmail.com) to learn more about Distrans.
