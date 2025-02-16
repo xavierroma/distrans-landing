@@ -1,11 +1,11 @@
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Dot, MoveRight, BarChart2, Code, Shield, Zap } from "lucide-react";
-import Image from "next/image";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { GradientCanvas } from "@/components/gradient-canvas";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { WaitlistForm } from "@/components/waitlist-form"
+import { WaitlistForm } from "@/components/waitlist-form";
+import { BarChart2, Code, MoveRight, Zap } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 
 async function joinWaitlist(formData: FormData) {
