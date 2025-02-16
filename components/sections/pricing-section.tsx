@@ -49,7 +49,7 @@ export function PricingSection() {
   const estimatedCost = getCumulativeCost(emails);
 
   return (
-    <section id="pricing" className="w-full p-8">
+    <section id="pricing" className="w-full  p-4 md:p-8">
       <h2 className="text-3xl font-bold mb-8 text-center">Pricing</h2>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
         {/* Combined Pricing Calculator Card (Slider + Labels) */}
@@ -60,7 +60,7 @@ export function PricingSection() {
           <CardContent className="space-y-8">
             <div className="flex flex-col items-center space-y-4">
               <label htmlFor="emailUsage" className="text-sm font-medium">
-                Monthly Email Volume: {emails.toLocaleString()} emails
+                Monthly Volume: {emails.toLocaleString()} emails
               </label>
               <Slider
                 id="emailUsage"

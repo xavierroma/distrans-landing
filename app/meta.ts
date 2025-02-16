@@ -2,9 +2,9 @@ import { Metadata } from "next"
 
 export const siteConfig = {
   name: "Distrans - Inboxes for AI Agents",
-  description: "Empowering AI Agents with Email Inboxes.",
+  description: "Get unlimited inboxes for your assistants",
   url: "https://distranmail.com",
-  ogImage: "/og.jpg",
+  ogImage: "/distrans.png",
 }
 
 export const metadata: Metadata = {
@@ -17,6 +17,9 @@ export const metadata: Metadata = {
     "AI email",
     "AI agent inbox",
     "email API",
+    "Assistant email",
+    "transactional email",
+    "email inbox as a service",
     "AI communication",
     "developer tools",
     "email infrastructure",
@@ -56,12 +59,8 @@ export const metadata: Metadata = {
         url: "/favicon.ico",
         sizes: "32x32",
       },
-      {
-        url: "/favicon.svg",
-        type: "image/svg+xml",
-      },
     ],
-    apple: "/apple-touch-icon.png",
+    apple: "/distrans.png",
   },
   manifest: `${siteConfig.url}/site.webmanifest`,
 }

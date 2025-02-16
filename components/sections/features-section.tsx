@@ -16,7 +16,7 @@ export function FeaturesSection() {
   return (
     <section
       id="features"
-      className="relative w-full overflow-hidden rounded-3xl bg-background/50 p-8 scroll-mt-64 snap-start"
+      className="relative w-full overflow-hidden rounded-3xl bg-background/50 scroll-mt-64 snap-start p-4 md:p-8"
     >
       <h2 className="text-3xl font-bold mb-8 text-center">Features</h2>
       <motion.div

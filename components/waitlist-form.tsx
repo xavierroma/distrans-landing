@@ -30,7 +30,7 @@ export function WaitlistForm({
             className="flex-1"
           />
           <Button type="submit" className="group">
-            <span className="transition-all duration-300">Request Access</span>
+            <span className="transition-all duration-300">Request</span>
             <div className="overflow-hidden inline-block transition-all duration-300 w-0 group-hover:w-4">
               <MoveRight className="h-4 w-4 inline-block opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
             </div>

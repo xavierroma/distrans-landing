@@ -7,7 +7,7 @@ import { GradientCanvas } from "../gradient-canvas";
 
 export function HeroSection() {
   return (
-    <section className="relative w-full overflow-hidden rounded-3xl bg-background/50 p-8">
+    <section id="hero" className="relative w-full overflow-hidden rounded-3xl bg-background/50 p-4 md:p-8">
       <div className="absolute inset-0">
         <GradientCanvas />
       </div>
@@ -48,44 +48,42 @@ export function HeroSection() {
         </div>
         <div className="w-full mt-12">
           <p className="text-sm text-muted-foreground text-center mb-6">Works with</p>
-          <div className="relative w-full overflow-hidden">
-            <div className="flex flex-row w-full justify-center items-center gap-8 md:gap-12 overflow-x-auto whitespace-nowrap">
-              <Image
-                src="/gmail.png"
-                alt="Gmail"
-                width={64}
-                height={64}
-                className="grayscale opacity-75 hover:grayscale-0 hover:opacity-100 transition-all duration-300"
-              />
-              <Image
-                src="/apple-mail.png"
-                alt="Apple Mail"
-                width={64}
-                height={64}
-                className="grayscale opacity-75 hover:grayscale-0 hover:opacity-100 transition-all duration-300"
-              />
-              <Image
-                src="/outlook.png"
-                alt="Outlook"
-                width={64}
-                height={64}
-                className="grayscale opacity-75 hover:grayscale-0 hover:opacity-100 transition-all duration-300"
-              />
-              <Image
-                src="/langchain.svg"
-                alt="Langchain"
-                width={96}
-                height={64}
-                className="grayscale opacity-75 hover:grayscale-0 hover:opacity-100 transition-all duration-300"
-              />
-              <Image
-                src="/zoho.svg"
-                alt="Zoho"
-                width={96}
-                height={64}
-                className="grayscale opacity-75 hover:grayscale-0 hover:opacity-100 transition-all duration-300"
-              />
-            </div>
+          <div className="flex flex-row flex-wrap justify-center items-center gap-4 md:gap-12">
+            <Image
+              src="/gmail.png"
+              alt="Gmail"
+              width={64}
+              height={64}
+              className="grayscale opacity-75 hover:grayscale-0 hover:opacity-100 transition-all duration-300"
+            />
+            <Image
+              src="/apple-mail.png"
+              alt="Apple Mail"
+              width={64}
+              height={64}
+              className="grayscale opacity-75 hover:grayscale-0 hover:opacity-100 transition-all duration-300"
+            />
+            <Image
+              src="/outlook.png"
+              alt="Outlook"
+              width={64}
+              height={64}
+              className="grayscale opacity-75 hover:grayscale-0 hover:opacity-100 transition-all duration-300"
+            />
+            <Image
+              src="/langchain.svg"
+              alt="Langchain"
+              width={96}
+              height={64}
+              className="grayscale opacity-75 hover:grayscale-0 hover:opacity-100 transition-all duration-300"
+            />
+            <Image
+              src="/zoho.svg"
+              alt="Zoho"
+              width={96}
+              height={64}
+              className="grayscale opacity-75 hover:grayscale-0 hover:opacity-100 transition-all duration-300"
+            />
           </div>
         </div>
       </div>
