@@ -2,13 +2,12 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   /* config options here */
-  async redirects() {
+  async rewrites() {
     return [
       {
-        source: '/docs',
-        destination: 'https://distrans.mintlify.app',
-        permanent: true,
-        basePath: false
+        // Match /docs and any subpath (e.g., /docs/inboxes, /docs/foo/bar, etc.)
+        source: '/docs/:path*',
+        destination: 'https://docs.distranmail.com/:path*'
       }
     ];
   }
